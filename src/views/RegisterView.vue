@@ -97,11 +97,13 @@ const handleRegister = async () => {
   message.value = ''
 
   try {
-    await authStore.register(form)
-    message.value = 'Регистрация успешна! Теперь войдите в систему.'
-    setTimeout(() => {
-      router.push('/login')
-    }, 2000)
+    const user = await authStore.register(form)
+    await authStore.login({
+      email: form.email,
+      password: form.password
+    })
+    message.value = 'Регистрация успешна! Добро пожаловать!'
+    router.push('/')
   } catch (error) {
     if (error.errors) {
       errors.value = error.errors

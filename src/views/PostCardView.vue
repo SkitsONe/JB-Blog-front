@@ -15,7 +15,7 @@
 
       <!-- Краткое описание -->
       <p class="text-gray-600 mb-4 line-clamp-3">
-        {{ post.excerpt || truncateContent(post.content) }}
+        {{ post.short_description || truncateContent(post.content) }}
       </p>
 
       <!-- Мета-информация -->

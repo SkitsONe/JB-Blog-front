@@ -27,7 +27,48 @@ nav {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Базовые стили кнопок */
+.custom-heading {
+  font-size: 30px;
+  font-weight: bold;
+  color: #1a202c;
+  margin: 0 0 10px 10px;
+  padding: 10px;
+}
+
+.small-gray-text {
+  margin: 10px;
+  font-size: 14px;
+  color: #6b7280;
+  padding: 10px;
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+
+.custom-element {
+  font-size: 1.25rem;    /* 20px - text-xl */
+  line-height: 1.75rem;  /* 28px */
+  font-weight: 700;      /* bold */
+  color: #111827;        /* text-gray-900 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* line-clamp-2 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 0.75rem; /* 12px - mb-3 */
+  flex-grow: 1;          /* flex-grow */
+  transition-property: color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  padding: 0 0 0 10px;
+}
+
+.group:hover .custom-element {
+  color: #2563eb;        /* group-hover:text-blue-600 */
+}
+
 .btn-primary {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -46,6 +87,7 @@ nav {
   text-decoration: none;
   position: relative;
   overflow: hidden;
+  margin: 10px 0 10px 10px;
 }
 
 .btn-primary::before {
@@ -192,7 +234,7 @@ nav {
   font-size: 0.875rem;
   font-weight: 600;
   color: rgb(55, 65, 81);
-  margin-bottom: 0.75rem;
+  margin: 10px;
 }
 
 /* Навигационные ссылки */
@@ -295,10 +337,12 @@ nav {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  margin-left: 10px;
 }
 
 .posts-toggle button:not(.active) {
   color: rgb(107, 114, 128);
+  margin-left: 10px;
 }
 
 .posts-toggle button:not(.active):hover {
@@ -323,6 +367,7 @@ nav {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
   color: rgb(37, 99, 235);
   border-color: rgba(59, 130, 246, 0.3);
+  margin: 10px;
 }
 
 .badge-green {
@@ -375,6 +420,22 @@ nav {
   color: rgb(30, 64, 175);
 }
 
+.truncated-title {
+  font-size: 20px;
+  color: #111827;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 12px;
+  flex-grow: 1;
+  transition: color 0.15s ease-in-out;
+  padding: 0 0 0 10px;
+}
+
+.group:hover .truncated-title {
+  color: #2563eb;
+}
 /* Контейнеры */
 .container {
   max-width: 1200px;
@@ -406,18 +467,28 @@ nav {
   overflow: hidden;
 }
 
-/* Стили для выпадающих списков */
 select.form-input {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 1rem center;
+  padding-right: 2.5rem;
+  background:
+    linear-gradient(45deg, transparent 50%, #6b7280 50%),
+    linear-gradient(135deg, #6b7280 50%, transparent 50%);
+  background-position:
+    calc(100% - 15px) 50%,
+    calc(100% - 10px) 50%;
+  background-size: 5px 5px;
   background-repeat: no-repeat;
-  background-size: 1.25em 1.25em;
-  padding-right: 3rem;
 }
 
 select.form-input:focus {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background:
+    linear-gradient(45deg, transparent 50%, #667eea 50%),
+    linear-gradient(135deg, #667eea 50%, transparent 50%);
+  background-position:
+    calc(100% - 15px) 50%,
+    calc(100% - 10px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
 }
 
 /* Анимации */

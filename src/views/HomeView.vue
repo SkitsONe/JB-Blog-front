@@ -3,11 +3,11 @@
     <!-- Герой секция -->
     <section class="text-center mb-12">
       <div class="max-w-3xl mx-auto">
-        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+        <h1 class="custom-heading">
           Добро пожаловать в
           <span class="text-blue-600">наш блог</span>
         </h1>
-        <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+        <p class="small-gray-text">
           Платформа для создания и публикации статей на различные темы.
           Делитесь знаниями, находите вдохновение и развивайтесь вместе с нами.
         </p>
@@ -18,6 +18,14 @@
           >
             <span>📚</span>
             <span>Читать статьи</span>
+          </router-link>
+          <router-link
+            v-if="isAuthenticated"
+            to="/posts/create"
+            class="btn-primary"
+          >
+            <span class="mr-2">✏️</span>
+            Новая статья
           </router-link>
           <router-link
             v-if="!isAuthenticated"
@@ -35,8 +43,8 @@
     <section>
       <div class="flex justify-between items-center mb-8">
         <div>
-          <h2 class="text-2xl font-bold text-gray-900">Последние статьи</h2>
-          <p class="text-gray-600 mt-1">Самые свежие публикации в нашем блоге</p>
+          <h2 class="custom-heading">Последние статьи</h2>
+          <p class="custom-heading">Самые свежие публикации в нашем блоге</p>
         </div>
         <router-link
           to="/posts"
@@ -82,24 +90,24 @@
             </div>
 
             <!-- Заголовок -->
-            <h3 class="text-lg font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors flex-grow">
+            <h3 class="custom-element">
               {{ post.title }}
             </h3>
 
             <!-- Описание -->
-            <p class="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed flex-grow">
-              {{ getExcerpt(post) }}
+            <p class="truncated-title">
+              {{ getShortDescription(post) }}
             </p>
 
             <!-- Автор -->
             <div class="flex items-center justify-between pt-3 border-t border-gray-100">
               <div class="flex items-center space-x-2">
                 <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span class="text-blue-600 text-xs font-bold">
+                  <span class="truncated-title">
                     {{ getInitials(getAuthorName(post)) }}
                   </span>
                 </div>
-                <span class="text-sm text-gray-700 font-medium">
+                <span class="truncated-title">
                   {{ getAuthorName(post) }}
                 </span>
               </div>
@@ -179,8 +187,8 @@ const getAuthorName = (post) => {
   return post.user?.name || post.author_name || 'Неизвестный автор'
 }
 
-const getExcerpt = (post) => {
-  if (post.excerpt) return post.excerpt
+const getShortDescription = (post) => {
+  if (post.short_description) return post.short_description
   if (post.content) {
     return post.content.length > 100 ? post.content.substring(0, 100) + '...' : post.content
   }

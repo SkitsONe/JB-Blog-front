@@ -47,12 +47,12 @@
         </div>
 
         <!-- Заголовок -->
-        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+        <h1 class="custom-heading">
           {{ postsStore.currentPost.title }}
         </h1>
 
         <!-- Мета-информация -->
-        <div class="flex flex-col sm:flex-row sm:items-center text-gray-600 mb-6 gap-2">
+        <div class="custom-element">
           <div class="flex items-center space-x-2">
             <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
               <span class="text-blue-600 text-sm font-bold">
@@ -66,15 +66,15 @@
         </div>
 
         <!-- Краткое описание -->
-        <div v-if="postsStore.currentPost.excerpt" class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
-          <p class="text-lg text-blue-800 leading-relaxed italic">
-            {{ postsStore.currentPost.excerpt }}
+        <div v-if="postsStore.currentPost.short_description" class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
+          <p class="truncated-title">
+            {{ postsStore.currentPost.short_description }}
           </p>
         </div>
 
         <!-- Содержание -->
         <article class="prose prose-lg max-w-none">
-          <div class="text-gray-700 leading-8 whitespace-pre-line">
+          <div class="truncated-title">
             {{ postsStore.currentPost.content }}
           </div>
         </article>

@@ -4,10 +4,10 @@
       <!-- Заголовок и управление -->
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">
+          <h1 class="custom-heading">
             {{ selectedCategory ? `Категория: ${selectedCategory}` : showMyPosts ? 'Мои статьи' : 'Все статьи' }}
           </h1>
-          <p class="text-gray-600">
+          <p class="custom-heading">
             {{ selectedCategory
             ? `Статьи в категории "${selectedCategory}"`
             : showMyPosts ? 'Статьи, которые вы создали' : 'Найдите интересующие вас материалы'
@@ -28,7 +28,7 @@
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+        <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center margin-left 10px">
           <!-- Переключатель Мои/Все статьи (скрываем при фильтрации по категории) -->
           <div v-if="isAuthenticated && user && !selectedCategory" class="posts-toggle">
             <button
@@ -93,24 +93,24 @@
           </div>
 
           <!-- Заголовок -->
-          <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors flex-grow">
+          <h3 class="custom-element">
             {{ post.title }}
           </h3>
 
           <!-- Описание -->
-          <p class="text-gray-600 mb-4 line-clamp-3 leading-relaxed flex-grow">
-            {{ getExcerpt(post) }}
+          <p class="truncated-title">
+            {{ getShortDescription(post) }}
           </p>
 
           <!-- Автор и действия -->
           <div class="flex items-center justify-between pt-4 border-t border-gray-100">
             <div class="flex items-center space-x-2 my-4">
               <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mt-4 mb-4">
-                <span class="text-blue-600 text-xs font-bold my-4">
+                <span class="truncated-title">
                   {{ getInitials(getAuthorName(post)) }}
                 </span>
               </div>
-              <span class="text-sm text-gray-700 font-medium my-4">
+              <span class="truncated-title">
                 {{ getAuthorName(post) }}
               </span>
             </div>
@@ -244,8 +244,8 @@ const getAuthorName = (post) => {
   return post.user?.name || post.author_name || 'Неизвестный автор'
 }
 
-const getExcerpt = (post) => {
-  if (post.excerpt) return post.excerpt
+const getShortDescription = (post) => {
+  if (post.short_description) return post.short_description
   if (post.content) {
     return post.content.length > 120 ? post.content.substring(0, 120) + '...' : post.content
   }

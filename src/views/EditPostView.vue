@@ -72,16 +72,16 @@
           </div>
 
           <div>
-            <label for="excerpt" class="form-label">Краткое описание</label>
+            <label for="short_description" class="form-label">Краткое описание</label>
             <textarea
-              v-model="form.excerpt"
-              id="excerpt"
+              v-model="form.short_description"
+              id="short_description"
               rows="3"
               class="form-input"
-              :class="{ 'border-red-500': errors.excerpt }"
+              :class="{ 'border-red-500': errors.short_description }"
               placeholder="Краткое описание статьи (необязательно)"
             ></textarea>
-            <p v-if="errors.excerpt" class="mt-1 text-sm text-red-600">{{ errors.excerpt[0] }}</p>
+            <p v-if="errors.short.description" class="mt-1 text-sm text-red-600">{{ errors.short_description[0] }}</p>
           </div>
 
           <div>
@@ -98,7 +98,7 @@
             <p v-if="errors.content" class="mt-1 text-sm text-red-600">{{ errors.content[0] }}</p>
           </div>
 
-          <div class="flex items-center">
+          <div class="flex-container">
             <input
               v-model="form.published"
               type="checkbox"
@@ -171,7 +171,7 @@ const message = ref('')
 const form = reactive({
   title: '',
   category_name: '',
-  excerpt: '',
+  short_description: '',
   content: '',
   published: true
 })
@@ -222,7 +222,7 @@ const fetchPost = async () => {
     Object.assign(form, {
       title: post.title || '',
       category_name: post.category_name || post.category?.name || '',
-      excerpt: post.excerpt || '',
+      short_description: post.short_description || '',
       content: post.content || '',
       published: post.published !== undefined ? post.published : true
     })

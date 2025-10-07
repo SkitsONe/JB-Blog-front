@@ -2,7 +2,7 @@
   <div class="max-w-4xl mx-auto px-4 py-8">
     <div class="card">
       <div class="card-body">
-        <h1 class="text-3xl font-bold mb-8">Создать новую статью</h1>
+        <h1 class="custom-heading">Создать новую статью</h1>
 
         <form @submit.prevent="handleCreatePost" class="space-y-6">
           <div>
@@ -51,7 +51,7 @@
               />
             </div>
             <p v-if="errors.category_name" class="mt-1 text-sm text-red-600">{{ errors.category_name[0] }}</p>
-            <p class="mt-1 text-sm text-gray-500">
+            <p class="small-gray-text">
               {{ showNewCategoryInput
               ? 'Введите название новой категории'
               : 'Выберите существующую категорию или создайте новую'
@@ -60,16 +60,16 @@
           </div>
 
           <div>
-            <label for="excerpt" class="form-label">Краткое описание</label>
+            <label for="short_description" class="form-label">Краткое описание</label>
             <textarea
-              v-model="form.excerpt"
-              id="excerpt"
+              v-model="form.short_description"
+              id="short_description"
               rows="3"
               class="form-input"
-              :class="{ 'border-red-500': errors.excerpt }"
+              :class="{ 'border-red-500': errors.short_description }"
               placeholder="Краткое описание статьи (необязательно)"
             ></textarea>
-            <p v-if="errors.excerpt" class="mt-1 text-sm text-red-600">{{ errors.excerpt[0] }}</p>
+            <p v-if="errors.short_description" class="mt-1 text-sm text-red-600">{{ errors.short_description[0] }}</p>
           </div>
 
           <div>
@@ -86,7 +86,7 @@
             <p v-if="errors.content" class="mt-1 text-sm text-red-600">{{ errors.content[0] }}</p>
           </div>
 
-          <div class="flex items-center">
+          <div class="flex-container">
             <input
               v-model="form.published"
               type="checkbox"
@@ -108,7 +108,6 @@
               <span v-else>📝</span>
               <span>{{ postsStore.loading ? 'Создание...' : 'Создать статью' }}</span>
             </button>
-
             <router-link to="/posts" class="btn-secondary text-center">
               Отмена
             </router-link>
@@ -144,7 +143,7 @@ const message = ref('')
 const form = reactive({
   title: '',
   category_name: '',
-  excerpt: '',
+  short_description: '',
   content: '',
   published: true
 })
