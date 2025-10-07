@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-md mx-auto mt-12">
     <div class="bg-white p-8 rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold text-center mb-6">Вход в систему</h2>
+      <h2 class="custom-heading">Вход в систему</h2>
 
       <form @submit.prevent="handleLogin" class="space-y-4">
         <div>
@@ -42,7 +42,7 @@
           {{ message }}
         </div>
 
-        <p class="text-center text-sm text-gray-600">
+        <p class="small-gray-text">
           Нет аккаунта?
           <router-link to="/register" class="font-medium text-blue-600 hover:text-blue-500">
             Зарегистрируйтесь

@@ -81,7 +81,7 @@
               :class="{ 'border-red-500': errors.short_description }"
               placeholder="Краткое описание статьи (необязательно)"
             ></textarea>
-            <p v-if="errors.short.description" class="mt-1 text-sm text-red-600">{{ errors.short_description[0] }}</p>
+            <p v-if="errors.short_description" class="mt-1 text-sm text-red-600">{{ errors.short_description[0] }}</p>
           </div>
 
           <div>
@@ -158,7 +158,7 @@ const router = useRouter()
 const postsStore = usePostsStore()
 const authStore = useAuthStore()
 
-const { user } = storeToRefs(authStore) // Правильное использование storeToRefs
+const { user } = storeToRefs(authStore)
 
 const categories = ref([])
 const selectedCategory = ref('')

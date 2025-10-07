@@ -4,8 +4,8 @@
       <!-- Заголовок и кнопка -->
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Категории</h1>
-          <p class="text-gray-600">Исследуйте статьи по темам</p>
+          <h1 class="custom-heading">Категории</h1>
+          <p class="custom-element">Исследуйте статьи по темам</p>
         </div>
         <button
           v-if="isAuthenticated"
@@ -88,7 +88,7 @@
             <div class="flex justify-center items-center space-x-4 text-sm text-gray-500">
               <span class="inline-flex items-center space-x-1">
                 <span>📄</span>
-                <span>{{ category.posts_count || 0 }} статей</span>
+                <span>{{ getArticlesCountText(category.posts_count || 0) }}</span>
               </span>
             </div>
           </div>
@@ -136,6 +136,28 @@ const newCategory = reactive({
 })
 
 const errors = ref({})
+
+// Функция для склонения слова "статья"
+const getArticlesCountText = (count) => {
+  if (count === 0) return 'нет статей'
+
+  const lastDigit = count % 10
+  const lastTwoDigits = count % 100
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+    return `${count} статей`
+  }
+
+  if (lastDigit === 1) {
+    return `${count} статья`
+  }
+
+  if (lastDigit >= 2 && lastDigit <= 4) {
+    return `${count} статьи`
+  }
+
+  return `${count} статей`
+}
 
 // Загрузка категорий
 const fetchCategories = async () => {
