@@ -229,7 +229,6 @@ const deleteCategory = async (category) => {
 
   try {
     await categoriesAPI.delete(category.id)
-    // Удаляем категорию из списка
     categories.value = categories.value.filter(c => c.id !== category.id)
   } catch (err) {
     alert(err.message || 'Ошибка при удалении категории')

@@ -52,6 +52,26 @@
             <p v-if="errors.description" class="mt-1 text-sm text-red-600">{{ errors.description[0] }}</p>
           </div>
 
+          <!-- Предупреждение о наличии статей -->
+          <div v-if="category?.posts_count > 0" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <span class="text-yellow-400 text-lg">⚠️</span>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-yellow-800">
+                  Внимание
+                </h3>
+                <div class="mt-1 text-sm text-yellow-700">
+                  <p>
+                    В этой категории есть статьи ({{ category.posts_count }}).
+                    Удаление категории невозможно до тех пор, пока все статьи не будут перемещены в другую категорию или удалены.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
             <button
               type="submit"
@@ -70,9 +90,9 @@
             <button
               type="button"
               @click="handleDeleteCategory"
-              :disabled="category?.posts_count > 0"
-              class="btn-danger inline-flex items-center justify-center space-x-2 disabled:opacity-50"
-              :title="category?.posts_count > 0 ? 'Нельзя удалить категорию со статьями' : ''"
+              :disabled="postsCount > 0 || loading"
+              class="btn-danger inline-flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              :title="postsCount > 0 ? 'Нельзя удалить категорию со статьями' : ''"
             >
               <span>🗑️</span>
               <span>Удалить категорию</span>
@@ -92,13 +112,14 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { categoriesAPI } from '@/services/api'
+import { categoriesAPI, postsAPI } from '@/services/api'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 
 const category = ref(null)
+const postsCount = ref(0) // Отдельная переменная для количества постов
 const loadingData = ref(true)
 const loading = ref(false)
 const loadError = ref('')
@@ -116,14 +137,24 @@ const messageClass = computed(() => {
     : 'alert-error'
 })
 
-// Загрузка категории
+// Загрузка категории и количества постов
 const fetchCategory = async () => {
   loadingData.value = true
   loadError.value = ''
 
   try {
+    // Загружаем категорию
     const response = await categoriesAPI.getById(route.params.id)
     category.value = response.data.data || response.data
+
+    // Загружаем количество постов в этой категории
+    try {
+      const postsResponse = await postsAPI.getAll({ category_id: route.params.id, per_page: 1 })
+      postsCount.value = postsResponse.data.meta?.total || 0
+    } catch (postsError) {
+      console.warn('Не удалось загрузить количество постов:', postsError)
+      postsCount.value = 0
+    }
 
     // Заполнение формы
     Object.assign(form, {
@@ -168,8 +199,9 @@ const handleUpdateCategory = async () => {
 
 // Удаление категории
 const handleDeleteCategory = async () => {
-  if (category.value.posts_count > 0) {
-    alert('Нельзя удалить категорию, в которой есть статьи')
+  // Используем postsCount вместо category.value.posts_count
+  if (postsCount.value > 0) {
+    message.value = 'Нельзя удалить категорию, в которой есть статьи'
     return
   }
 
@@ -182,7 +214,11 @@ const handleDeleteCategory = async () => {
       router.push('/categories')
     }, 1500)
   } catch (error) {
-    message.value = error.message || 'Ошибка при удалении категории'
+    if (error.message.includes('Нельзя удалить категорию') || error.message.includes('статьи')) {
+      message.value = 'Нельзя удалить категорию, в которой есть статьи'
+    } else {
+      message.value = error.message || 'Ошибка при удалении категории'
+    }
   }
 }
 </script>
