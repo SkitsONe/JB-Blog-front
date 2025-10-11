@@ -10,6 +10,7 @@ const api = axios.create({
   },
   timeout: 10000,
 })
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('auth_token')
   console.log(`📡 ${config.method?.toUpperCase()} ${config.url}`, {
@@ -22,7 +23,6 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Интерцептор для логирования ответов
 api.interceptors.response.use(
   (response) => {
     console.log(`✅ ${response.config.method?.toUpperCase()} ${response.config.url}:`, response.data)
@@ -30,18 +30,7 @@ api.interceptors.response.use(
   },
   (error) => {
     console.error(`❌ ${error.config?.method?.toUpperCase()} ${error.config?.url}:`, error.response?.data || error.message)
-    const handledError = handleApiError(error)
-    if (error.response?.status === 401) {
-      localStorage.removeItem('auth_token')
-    }
-    return Promise.reject(handledError)
-  }
-)
 
-// Интерцептор для обработки ошибок
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
     const handledError = handleApiError(error)
 
     if (error.response?.status === 401) {
@@ -70,8 +59,9 @@ export const postsAPI = {
 export const categoriesAPI = {
   getAll: () => api.get('/categories'),
   getById: (id) => api.get(`/categories/${id}`),
-  getAvailable: () => api.get('/categories/available'),
   create: (categoryData) => api.post('/categories', categoryData),
+  update: (id, categoryData) => api.put(`/categories/${id}`, categoryData),
+  delete: (id) => api.delete(`/categories/${id}`),
 }
 
 export default api

@@ -41,6 +41,12 @@ const routes = [
     name: 'Categories',
     component: () => import('@/views/CategoriesView.vue'),
   },
+  {
+    path: '/categories/:id/edit',
+    name: 'EditCategory',
+    component: () => import('@/views/EditCategoryView.vue'),
+    meta: { requiresAuth: true }
+  }
 ]
 
 const router = createRouter({

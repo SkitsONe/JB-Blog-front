@@ -20,42 +20,25 @@
           </div>
 
           <div>
-            <label for="category" class="form-label">Категория</label>
-            <div class="flex gap-3">
-              <!-- Выпадающий список категорий -->
-              <select
-                v-model="selectedCategoryId"
-                @change="onCategorySelect"
-                class="form-input flex-1"
-                :class="{ 'border-red-500': errors.category_name }"
+            <label for="category_id" class="form-label">Категория</label>
+            <select
+              v-model="form.category_id"
+              id="category_id"
+              class="form-input"
+              :class="{ 'border-red-500': errors.category_id }"
+            >
+              <option value="">Выберите категорию...</option>
+              <option
+                v-for="category in categories"
+                :key="category.id"
+                :value="category.id"
               >
-                <option value="">Выберите категорию...</option>
-                <option
-                  v-for="category in categories"
-                  :key="category.id"
-                  :value="category.id"
-                >
-                  {{ category.name }}
-                </option>
-                <option value="new">+ Создать новую категорию</option>
-              </select>
-
-              <!-- Поле для новой категории -->
-              <input
-                v-if="showNewCategoryInput"
-                v-model="form.category_name"
-                type="text"
-                class="form-input flex-1"
-                :class="{ 'border-red-500': errors.category_name }"
-                placeholder="Введите название новой категории"
-              />
-            </div>
-            <p v-if="errors.category_name" class="mt-1 text-sm text-red-600">{{ errors.category_name[0] }}</p>
+                {{ category.name }}
+              </option>
+            </select>
+            <p v-if="errors.category_id" class="mt-1 text-sm text-red-600">{{ errors.category_id[0] }}</p>
             <p class="small-gray-text">
-              {{ showNewCategoryInput
-              ? 'Введите название новой категории'
-              : 'Выберите существующую категорию или создайте новую'
-              }}
+              Выберите категорию для статьи
             </p>
           </div>
 
@@ -135,14 +118,12 @@ const postsStore = usePostsStore()
 const authStore = useAuthStore()
 
 const categories = ref([])
-const selectedCategoryId = ref('') // Изменили на ID
-const showNewCategoryInput = ref(false)
 const errors = ref({})
 const message = ref('')
 
 const form = reactive({
   title: '',
-  category_name: '',
+  category_id: '',
   short_description: '',
   content: '',
   published: true
@@ -161,6 +142,7 @@ const loadCategories = async () => {
     categories.value = response.data.data || response.data || []
   } catch (error) {
     console.error('Ошибка загрузки категорий:', error)
+    // Fallback категории
     categories.value = [
       { id: 1, name: 'Технологии' },
       { id: 2, name: 'Путешествия' },
@@ -172,33 +154,9 @@ const loadCategories = async () => {
   }
 }
 
-// Обработчик выбора категории
-const onCategorySelect = () => {
-  if (selectedCategoryId.value === 'new') {
-    // Пользователь выбрал создание новой категории
-    showNewCategoryInput.value = true
-    form.category_name = ''
-  } else if (selectedCategoryId.value) {
-    // Пользователь выбрал существующую категорию
-    showNewCategoryInput.value = false
-    // Находим выбранную категорию по ID и берем ее название
-    const selectedCategory = categories.value.find(cat => cat.id === selectedCategoryId.value)
-    form.category_name = selectedCategory ? selectedCategory.name : ''
-  } else {
-    // Категория не выбрана
-    showNewCategoryInput.value = false
-    form.category_name = ''
-  }
-}
-
 const handleCreatePost = async () => {
   if (!authStore.isAuthenticated) {
     message.value = 'Для создания статьи необходимо войти в систему'
-    return
-  }
-
-  if (!form.category_name.trim()) {
-    errors.value = { category_name: ['Пожалуйста, выберите или создайте категорию'] }
     return
   }
 

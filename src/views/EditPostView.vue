@@ -40,35 +40,23 @@
           </div>
 
           <div>
-            <label for="category" class="form-label">Категория</label>
-            <div class="flex gap-3">
-              <select
-                v-model="selectedCategory"
-                @change="onCategorySelect"
-                class="form-input flex-1"
-                :class="{ 'border-red-500': errors.category_name }"
+            <label for="category_id" class="form-label">Категория</label>
+            <select
+              v-model="form.category_id"
+              id="category_id"
+              class="form-input"
+              :class="{ 'border-red-500': errors.category_id }"
+            >
+              <option value="">Выберите категорию...</option>
+              <option
+                v-for="category in categories"
+                :key="category.id"
+                :value="category.id"
               >
-                <option value="">Выберите категорию...</option>
-                <option
-                  v-for="category in categories"
-                  :key="category.id"
-                  :value="category.name"
-                >
-                  {{ category.name }}
-                </option>
-                <option value="new">+ Создать новую категорию</option>
-              </select>
-
-              <input
-                v-if="showNewCategoryInput"
-                v-model="form.category_name"
-                type="text"
-                class="form-input flex-1"
-                :class="{ 'border-red-500': errors.category_name }"
-                placeholder="Введите название новой категории"
-              />
-            </div>
-            <p v-if="errors.category_name" class="mt-1 text-sm text-red-600">{{ errors.category_name[0] }}</p>
+                {{ category.name }}
+              </option>
+            </select>
+            <p v-if="errors.category_id" class="mt-1 text-sm text-red-600">{{ errors.category_id[0] }}</p>
           </div>
 
           <div>
@@ -161,8 +149,6 @@ const authStore = useAuthStore()
 const { user } = storeToRefs(authStore)
 
 const categories = ref([])
-const selectedCategory = ref('')
-const showNewCategoryInput = ref(false)
 const loadingData = ref(true)
 const loadError = ref('')
 const errors = ref({})
@@ -170,7 +156,7 @@ const message = ref('')
 
 const form = reactive({
   title: '',
-  category_name: '',
+  category_id: '',
   short_description: '',
   content: '',
   published: true
@@ -192,20 +178,6 @@ const loadCategories = async () => {
   }
 }
 
-// Обработчик выбора категории
-const onCategorySelect = () => {
-  if (selectedCategory.value === 'new') {
-    showNewCategoryInput.value = true
-    form.category_name = ''
-  } else if (selectedCategory.value) {
-    showNewCategoryInput.value = false
-    form.category_name = selectedCategory.value
-  } else {
-    showNewCategoryInput.value = false
-    form.category_name = ''
-  }
-}
-
 // Загрузка статьи
 const fetchPost = async () => {
   loadingData.value = true
@@ -221,14 +193,11 @@ const fetchPost = async () => {
     // Заполнение формы
     Object.assign(form, {
       title: post.title || '',
-      category_name: post.category_name || post.category?.name || '',
+      category_id: post.category_id || post.category?.id || '',
       short_description: post.short_description || '',
       content: post.content || '',
       published: post.published !== undefined ? post.published : true
     })
-
-    // Устанавливаем выбранную категорию
-    selectedCategory.value = form.category_name
 
   } catch (error) {
     console.error('Ошибка загрузки статьи:', error)

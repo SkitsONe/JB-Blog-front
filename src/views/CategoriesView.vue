@@ -73,7 +73,6 @@
           v-for="category in categories"
           :key="category.id"
           class="card group cursor-pointer hover:shadow-xl transition-all duration-300"
-          @click="goToCategoryPosts(category)"
         >
           <div class="card-body text-center">
             <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-200 transition-colors">
@@ -85,11 +84,38 @@
             <p class="text-gray-600 text-sm mb-4 line-clamp-2">
               {{ category.description || `Статьи по теме "${category.name}"` }}
             </p>
-            <div class="flex justify-center items-center space-x-4 text-sm text-gray-500">
+            <div class="flex justify-center items-center space-x-4 text-sm text-gray-500 mb-4">
               <span class="inline-flex items-center space-x-1">
                 <span>📄</span>
                 <span>{{ getArticlesCountText(category.posts_count || 0) }}</span>
               </span>
+            </div>
+
+            <!-- Кнопки действий -->
+            <div v-if="isAuthenticated" class="flex justify-center space-x-2 mt-4">
+              <button
+                @click.stop="goToCategoryPosts(category)"
+                class="btn-secondary btn-sm inline-flex items-center space-x-1"
+              >
+                <span>👁️</span>
+                <span>Смотреть</span>
+              </button>
+              <button
+                @click.stop="editCategory(category)"
+                class="btn-primary btn-sm inline-flex items-center space-x-1"
+              >
+                <span>✏️</span>
+                <span>Редактировать</span>
+              </button>
+              <button
+                @click.stop="deleteCategory(category)"
+                :disabled="category.posts_count > 0"
+                class="btn-danger btn-sm inline-flex items-center space-x-1 disabled:opacity-50"
+                :title="category.posts_count > 0 ? 'Нельзя удалить категорию со статьями' : ''"
+              >
+                <span>🗑️</span>
+                <span>Удалить</span>
+              </button>
             </div>
           </div>
         </div>
@@ -176,7 +202,6 @@ const fetchCategories = async () => {
 
 // Переход к статьям категории
 const goToCategoryPosts = (category) => {
-  // Переходим на страницу статей с параметром фильтрации
   router.push({
     path: '/posts',
     query: {
@@ -184,6 +209,32 @@ const goToCategoryPosts = (category) => {
       category_id: category.id
     }
   })
+}
+
+// Редактирование категории
+const editCategory = (category) => {
+  router.push(`/categories/${category.id}/edit`)
+}
+
+// Удаление категории
+const deleteCategory = async (category) => {
+  if (category.posts_count > 0) {
+    alert('Нельзя удалить категорию, в которой есть статьи')
+    return
+  }
+
+  if (!confirm(`Вы уверены, что хотите удалить категорию "${category.name}"?`)) {
+    return
+  }
+
+  try {
+    await categoriesAPI.delete(category.id)
+    // Удаляем категорию из списка
+    categories.value = categories.value.filter(c => c.id !== category.id)
+  } catch (err) {
+    alert(err.message || 'Ошибка при удалении категории')
+    console.error('Error deleting category:', err)
+  }
 }
 
 // Создание категории

@@ -179,6 +179,7 @@ nav {
   align-items: center;
   justify-content: center;
   white-space: nowrap;
+  margin-left: 10px;
 }
 
 .btn-danger:hover {
