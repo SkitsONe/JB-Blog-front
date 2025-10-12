@@ -42,6 +42,13 @@ nav {
   padding: 10px;
 }
 
+.not-found-category {
+  margin: 0 0 5px 10px;
+  font-size: 16px;
+  color: #715a0c;
+  padding: 10px;
+}
+
 .flex-container {
   display: flex;
   align-items: center;
